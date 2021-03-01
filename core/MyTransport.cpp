@@ -650,7 +650,7 @@ void transportProcessMessage(void)
 	setIndication(INDICATION_RX);
 	uint8_t payloadLength;
 	// last is the first byte of the payload buffer
-	if (!transportHALReceive(&_msg, &payloadLength)) {
+	if (!transportHALReceiveHandler(&_msg, &payloadLength)) {
 		return;
 	}
 	// get message length and limit size
@@ -981,8 +981,7 @@ bool transportSendWrite(const uint8_t to, MyMessage &message)
 	const bool noACK = _transportConfig.passiveMode || (to == BROADCAST_ADDRESS);
 	// send
 	setIndication(INDICATION_TX);
-	const bool result = transportHALSend(to, &message, totalMsgLength,
-	                                     noACK);
+	const bool result = transportHALSendHandler(to, &message, totalMsgLength, noACK);
 
 	TRANSPORT_DEBUG(PSTR("%sTSF:MSG:SEND,%" PRIu8 "-%" PRIu8 "-%" PRIu8 "-%" PRIu8 ",s=%" PRIu8 ",c=%"
 	                     PRIu8 ",t=%" PRIu8 ",pt=%" PRIu8 ",l=%" PRIu8 ",sg=%" PRIu8 ",ft=%" PRIu8 ",st=%s:%s\n"),
@@ -1171,3 +1170,20 @@ int16_t transportSignalReport(const char command)
 	return 0;
 #endif
 }
+
+#if !defined(MY_TRANSPORT_HAL_SEND_HANDLER)
+bool transportHALSendHandler(const uint8_t nextRecipient, MyMessage* outMsg, const uint8_t len,
+                             const bool noACK)
+{
+	// default function handler
+	return transportHALSend(nextRecipient, outMsg, len, noACK);
+}
+#endif
+
+#if !defined(MY_TRANSPORT_HAL_RECEIVE_HANDLER)
+bool transportHALReceiveHandler(MyMessage* message, uint8_t* msgLength)
+{
+	// default function handler
+	return transportHALReceive(message, msgLength);
+}
+#endif

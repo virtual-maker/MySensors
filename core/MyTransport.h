@@ -569,5 +569,24 @@ int16_t transportSignalReport(const char command) __attribute__((unused));
 */
 int16_t transportGetSignalReport(const signalReport_t signalReport) __attribute__((unused));
 
+/**
+* @brief Allow users to define their own transport HAL send function
+* @param to recipient
+* @param data message to be sent
+* @param len length of message (header + payload)
+* @param noACK do not wait for ACK
+* @return true if message sent successfully
+*/
+bool transportHALSendHandler(const uint8_t nextRecipient, MyMessage* outMsg, const uint8_t len,
+                             const bool noACK);
+
+/**
+* @brief Allow users to define their own transport HAL receive function
+* @param inMsg received message from HAL FIFO
+* @param msgLength length of received message (header + payload)
+* @return True if valid message received
+*/
+bool transportHALReceiveHandler(MyMessage* message, uint8_t* msgLength);
+
 #endif // MyTransport_h
 /** @}*/

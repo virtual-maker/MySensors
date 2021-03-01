@@ -1199,6 +1199,18 @@
 #endif
 
 /**
+ * @def MY_TRANSPORT_HAL_SEND_HANDLER
+ * @brief Define to use own transport HAL send handler.
+ */
+//#define MY_TRANSPORT_HAL_SEND_HANDLER
+
+/**
+ * @def MY_TRANSPORT_HAL_RECEIVE_HANDLER
+ * @brief Define to use own transport HAL receive handler.
+ */
+//#define MY_TRANSPORT_HAL_RECEIVE_HANDLER
+
+/**
  * @def MY_SIGNAL_REPORT_ENABLED
  * @brief Enables signal report functionality.
  * @note This feature adds ~1kB code to the sketch.
@@ -2382,6 +2394,8 @@
 #define MY_REGISTRATION_CONTROLLER
 #define MY_TRANSPORT_UPLINK_CHECK_DISABLED
 #define MY_TRANSPORT_SANITY_CHECK
+#define MY_TRANSPORT_HAL_SEND_HANDLER
+#define MY_TRANSPORT_HAL_RECEIVE_HANDLER
 #define MY_NODE_LOCK_FEATURE
 #define MY_REPEATER_FEATURE
 #define MY_PASSIVE_NODE
