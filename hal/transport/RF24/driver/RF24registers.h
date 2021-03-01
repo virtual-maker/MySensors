@@ -41,10 +41,10 @@
 #define RF24_CRC_16				(3)
 
 // ARD, auto retry delay
-#define RF24_SET_ARD			(5)	//=1500us
+#define RF24_SET_ARD			(MY_RF24_AUTO_RETRY_DELAY)
 
 // ARD, auto retry count
-#define RF24_SET_ARC			(15)
+#define RF24_SET_ARC			(MY_RF24_AUTO_RETRY_COUNT)
 
 // nRF24L01(+) register definitions
 #define RF24_REG_NRF_CONFIG		(0x00)

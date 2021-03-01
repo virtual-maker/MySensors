@@ -502,6 +502,24 @@
 #ifndef MY_RF24_ADDR_WIDTH
 #define MY_RF24_ADDR_WIDTH (5)
 #endif
+
+/**
+ * @def MY_RF24_AUTO_RETRY_DELAY
+ * @brief RF24 register ARD specifies telegram transfer auto retry delay
+ *
+ * @note Resulting delay time depends also from @ref MY_RF24_DATARATE, see nRF24L01+ datasheet.
+ */
+#ifndef MY_RF24_AUTO_RETRY_DELAY
+#define MY_RF24_AUTO_RETRY_DELAY (5) // !< = 1500µs
+#endif
+
+/**
+ * @def MY_RF24_AUTO_RETRY_COUNT
+ * @brief RF24 register ARC specifies telegram transfer auto retry count
+ */
+#ifndef MY_RF24_AUTO_RETRY_COUNT
+#define MY_RF24_AUTO_RETRY_COUNT (15)
+#endif
 /** @}*/ // End of RF24SettingGrpPub group
 
 /**
@@ -1181,10 +1199,10 @@
 #endif
 
 /**
-* @def MY_SIGNAL_REPORT_ENABLED
-* @brief Enables signal report functionality.
-* @note This feature adds ~1kB code to the sketch.
-*/
+ * @def MY_SIGNAL_REPORT_ENABLED
+ * @brief Enables signal report functionality.
+ * @note This feature adds ~1kB code to the sketch.
+ */
 //#define MY_SIGNAL_REPORT_ENABLED
 
 /** @}*/ // End of RoutingNodeSettingGrpPub group
@@ -2452,6 +2470,8 @@
 #define MY_RF24_ENABLE_ENCRYPTION
 #define MY_RX_MESSAGE_BUFFER_FEATURE
 #define MY_RX_MESSAGE_BUFFER_SIZE
+#define MY_RF24_AUTO_RETRY_DELAY
+#define MY_RF24_AUTO_RETRY_COUNT
 // NRF5_ESB
 #define MY_RADIO_NRF5_ESB
 #define MY_NRF5_ESB_ENABLE_ENCRYPTION
