@@ -581,6 +581,12 @@ bool transportHALSendHandler(const uint8_t nextRecipient, MyMessage* outMsg, con
                              const bool noACK);
 
 /**
+* @brief Allow users to define their own transport HAL data available function
+* @return True if valid message received
+*/
+bool transportHALDataAvailableHandler(void);
+
+/**
 * @brief Allow users to define their own transport HAL receive function
 * @param inMsg received message from HAL FIFO
 * @param msgLength length of received message (header + payload)

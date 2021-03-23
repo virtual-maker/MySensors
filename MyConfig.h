@@ -1205,6 +1205,12 @@
 //#define MY_TRANSPORT_HAL_SEND_HANDLER
 
 /**
+ * @def MY_TRANSPORT_HAL_DATA_AVAILABLE_HANDLER
+ * @brief Define to use own transport HAL data available handler.
+ */
+//#define MY_TRANSPORT_HAL_DATA_AVAILABLE_HANDLER
+
+/**
  * @def MY_TRANSPORT_HAL_RECEIVE_HANDLER
  * @brief Define to use own transport HAL receive handler.
  */
@@ -2395,6 +2401,7 @@
 #define MY_TRANSPORT_UPLINK_CHECK_DISABLED
 #define MY_TRANSPORT_SANITY_CHECK
 #define MY_TRANSPORT_HAL_SEND_HANDLER
+#define MY_TRANSPORT_HAL_DATA_AVAILABLE_HANDLER
 #define MY_TRANSPORT_HAL_RECEIVE_HANDLER
 #define MY_NODE_LOCK_FEATURE
 #define MY_REPEATER_FEATURE

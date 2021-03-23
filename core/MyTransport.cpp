@@ -953,7 +953,7 @@ void transportProcessFIFO(void)
 
 	uint8_t _processedMessages = MAX_SUBSEQ_MSGS;
 	// process all msgs in FIFO or counter exit
-	while (transportHALDataAvailable() && _processedMessages--) {
+	while (transportHALDataAvailableHandler() && _processedMessages--) {
 		transportProcessMessage();
 	}
 #if defined(MY_OTA_FIRMWARE_FEATURE)
@@ -1177,6 +1177,14 @@ bool transportHALSendHandler(const uint8_t nextRecipient, MyMessage* outMsg, con
 {
 	// default function handler
 	return transportHALSend(nextRecipient, outMsg, len, noACK);
+}
+#endif
+
+#if !defined(MY_TRANSPORT_HAL_DATA_AVAILABLE_HANDLER)
+bool transportHALDataAvailableHandler(void)
+{
+	// default function handler
+	return transportHALDataAvailable();
 }
 #endif
 
