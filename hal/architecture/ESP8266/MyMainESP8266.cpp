@@ -17,6 +17,37 @@
  * version 2 as published by the Free Software Foundation.
  */
 
+// Following code is taken from Arduino ESP8266 core ver. 3.0.2
+// but needs to be patched to be compatible with ESP8266 core down to ver. 2.6.2
+// source: Arduino/cores/esp8266/core_esp8266_main.cpp
+
+// Define MySensors flag to distinguish between core versions
+#if ARDUINO_ESP8266_MAJOR == 3
+#define MYS_ARDUINO_ESP8266_MAJOR_3
+#endif
+
+/*
+main.cpp - platform initialization and context switching
+emulation
+
+Copyright (c) 2014 Ivan Grokhotkov. All rights reserved.
+This file is part of the esp8266 core for Arduino environment.
+
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
+
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
+
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+*/
+
 //This may be used to change user task stack size:
 //#define CONT_STACKSIZE 4096
 #include <Arduino.h>
@@ -31,10 +62,19 @@ extern "C" {
 }
 #include <core_version.h>
 #include "gdb_hooks.h"
+#ifdef MYS_ARDUINO_ESP8266_MAJOR_3
+#include "flash_quirks.h"
+#include "hwdt_app_entry.h"
+#include <umm_malloc/umm_malloc.h>
+#include <core_esp8266_non32xfer.h>
+#include "core_esp8266_vm.h"
+#endif
 
 #define LOOP_TASK_PRIORITY 1
 #define LOOP_QUEUE_SIZE    1
+#if !defined(MYS_ARDUINO_ESP8266_MAJOR_3)
 #define OPTIMISTIC_YIELD_TIME_US 16000
+#endif
 
 extern "C" void call_user_start();
 extern void loop();
@@ -55,14 +95,18 @@ cont_t* g_pcont __attribute__((section(".noinit")));
 static os_event_t s_loop_queue[LOOP_QUEUE_SIZE];
 
 /* Used to implement optimistic_yield */
+#ifdef MYS_ARDUINO_ESP8266_MAJOR_3
+static uint32_t s_cycles_at_yield_start;
+#else
 static uint32_t s_micros_at_task_start;
+#endif
 
 /* For ets_intr_lock_nest / ets_intr_unlock_nest
  * Max nesting seen by SDK so far is 2.
  */
 #define ETS_INTR_LOCK_NEST_MAX 7
 static uint16_t ets_intr_lock_stack[ETS_INTR_LOCK_NEST_MAX];
-static byte     ets_intr_lock_stack_ptr = 0;
+static uint8_t  ets_intr_lock_stack_ptr = 0;
 
 
 extern "C" {
@@ -81,14 +125,32 @@ void initVariant()
 {
 }
 
+#ifdef MYS_ARDUINO_ESP8266_MAJOR_3
+extern "C" void __preloop_update_frequency()
+#else
 void preloop_update_frequency() __attribute__((weak));
 void preloop_update_frequency()
+#endif
 {
 #if defined(F_CPU) && (F_CPU == 160000000L)
-	REG_SET_BIT(0x3ff00014, BIT(0));
 	ets_update_cpu_frequency(160);
+	CPU2X |= 1UL;
+#elif defined(F_CPU)
+	ets_update_cpu_frequency(80);
+	CPU2X &= ~1UL;
+#elif !defined(F_CPU)
+	if (system_get_cpu_freq() == 160) {
+		CPU2X |= 1UL;
+	} else {
+		CPU2X &= ~1UL;
+	}
 #endif
 }
+
+#ifdef MYS_ARDUINO_ESP8266_MAJOR_3
+extern "C" void preloop_update_frequency() __attribute__((weak,
+        alias("__preloop_update_frequency")));
+#endif
 
 extern "C" bool can_yield()
 {
@@ -99,19 +161,23 @@ static inline void esp_yield_within_cont() __attribute__((always_inline));
 static void esp_yield_within_cont()
 {
 	cont_yield(g_pcont);
+#ifdef MYS_ARDUINO_ESP8266_MAJOR_3
+	s_cycles_at_yield_start = ESP.getCycleCount();
+#endif
 	run_scheduled_recurrent_functions();
 }
 
-extern "C" void esp_yield()
+extern "C" void __esp_yield()
 {
 	if (can_yield()) {
 		esp_yield_within_cont();
 	}
 }
 
-extern "C" void esp_schedule()
+extern "C" void esp_yield() __attribute__((weak, alias("__esp_yield")));
+
+extern "C" IRAM_ATTR void esp_schedule()
 {
-	// always on CONT stack here
 	ets_post(LOOP_TASK_PRIORITY, 0, 0);
 }
 
@@ -129,8 +195,19 @@ extern "C" void yield(void) __attribute__((weak, alias("__yield")));
 
 extern "C" void optimistic_yield(uint32_t interval_us)
 {
+#ifdef MYS_ARDUINO_ESP8266_MAJOR_3
+	const uint32_t intvl_cycles = interval_us *
+#if defined(F_CPU)
+	                              clockCyclesPerMicrosecond();
+#else
+	                              ESP.getCpuFreqMHz();
+#endif
+	if ((ESP.getCycleCount() - s_cycles_at_yield_start) > intvl_cycles &&
+	        can_yield()) {
+#else
 	if (can_yield() &&
 	        (system_get_time() - s_micros_at_task_start) > interval_us) {
+#endif // MYS_ARDUINO_ESP8266_MAJOR_3
 		yield();
 	}
 }
@@ -163,7 +240,7 @@ extern "C" bool ets_post_rom(uint8 prio, ETSSignal sig, ETSParam par);
 extern "C" bool IRAM_ATTR ets_post(uint8 prio, ETSSignal sig, ETSParam par)
 {
 	uint32_t saved;
-	asm volatile ("rsr %0,ps":"=a" (saved));
+	__asm__ __volatile__("rsr %0,ps":"=a" (saved));
 	bool rc = ets_post_rom(prio, sig, par);
 	xt_wsr_ps(saved);
 	return rc;
@@ -187,15 +264,28 @@ static void loop_wrapper()
 	}
 	_process();			// Process incoming data
 	loop();
-	run_scheduled_functions();
+	loop_end();
+#ifdef MYS_ARDUINO_ESP8266_MAJOR_3
+	if (serialEventRun) {
+		serialEventRun();
+	}
+#endif
 	esp_schedule();
 }
 
 static void loop_task(os_event_t *events)
 {
 	(void)events;
+#ifdef MYS_ARDUINO_ESP8266_MAJOR_3
+	s_cycles_at_yield_start = ESP.getCycleCount();
+	ESP.resetHeap();
+#else
 	s_micros_at_task_start = system_get_time();
+#endif
 	cont_run(g_pcont, &loop_wrapper);
+#ifdef MYS_ARDUINO_ESP8266_MAJOR_3
+	ESP.setDramHeap();
+#endif
 	if (cont_check(g_pcont) != 0) {
 		panic();
 	}
@@ -253,6 +343,9 @@ void init_done()
 	std::set_terminate(__unhandled_exception_cpp);
 	do_global_ctors();
 	esp_schedule();
+#ifdef MYS_ARDUINO_ESP8266_MAJOR_3
+	ESP.setDramHeap();
+#endif
 }
 
 /* This is the entry point of the application.
@@ -280,7 +373,7 @@ void init_done()
 	know if other features are using this, or if this memory is going to be
 	used in future SDK releases.
 
-	WPS beeing flawed by its poor security, or not beeing used by lots of
+	WPS being flawed by its poor security, or not being used by lots of
 	users, it has been decided that we are still going to use that memory for
 	user's stack and disable the use of WPS.
 
@@ -308,6 +401,11 @@ extern "C" void app_entry_redefinable(void)
 	cont_t s_cont __attribute__((aligned(16)));
 	g_pcont = &s_cont;
 
+#ifdef MYS_ARDUINO_ESP8266_MAJOR_3
+	/* Doing umm_init just once before starting the SDK, allowed us to remove
+		 test and init calls at each malloc API entry point, saving IRAM. */
+	umm_init();
+#endif
 	/* Call the entry point of the SDK code. */
 	call_user_start();
 }
@@ -322,8 +420,21 @@ extern "C" void app_entry(void)
 extern "C" void preinit(void) __attribute__((weak));
 extern "C" void preinit(void)
 {
-	/* do nothing by default */
+	/* does nothing, kept for backward compatibility */
 }
+
+#ifdef MYS_ARDUINO_ESP8266_MAJOR_3
+extern "C" void __disableWiFiAtBootTime(void) __attribute__((weak));
+extern "C" void __disableWiFiAtBootTime(void)
+{
+	// Starting from arduino core v3: wifi is disabled at boot time
+	// WiFi.begin() or WiFi.softAP() will wake WiFi up
+	wifi_set_opmode_current(0/*WIFI_OFF*/);
+	wifi_fpm_set_sleep_type(MODEM_SLEEP_T);
+	wifi_fpm_open();
+	wifi_fpm_do_sleep(0xFFFFFFF);
+}
+#endif
 
 extern "C" void user_init(void)
 {
@@ -336,9 +447,33 @@ extern "C" void user_init(void)
 
 	initVariant();
 
+#ifdef MYS_ARDUINO_ESP8266_MAJOR_3
+	experimental::initFlashQuirks(); // Chip specific flash init.
+#endif
+
 	cont_init(g_pcont);
 
+#ifdef MYS_ARDUINO_ESP8266_MAJOR_3
+#if defined(DEBUG_ESP_HWDT) || defined(DEBUG_ESP_HWDT_NOEXTRA4K)
+	debug_hwdt_init();
+#endif
+
+#if defined(UMM_HEAP_EXTERNAL)
+	install_vm_exception_handler();
+#endif
+
+#if defined(NON32XFER_HANDLER) || defined(MMU_IRAM_HEAP)
+	install_non32xfer_exception_handler();
+#endif
+
+#if defined(MMU_IRAM_HEAP)
+	umm_init_iram();
+#endif
+#endif // MYS_ARDUINO_ESP8266_MAJOR_3
 	preinit(); // Prior to C++ Dynamic Init (not related to above init() ). Meant to be user redefinable.
+#ifdef MYS_ARDUINO_ESP8266_MAJOR_3
+	__disableWiFiAtBootTime(); // default weak function disables WiFi
+#endif
 
 	ets_task(loop_task,
 	         LOOP_TASK_PRIORITY, s_loop_queue,
