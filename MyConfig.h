@@ -6,7 +6,7 @@
  * network topology allowing messages to be routed to nodes.
  *
  * Created by Henrik Ekblad <henrik.ekblad@mysensors.org>
- * Copyright (C) 2013-2020 Sensnology AB
+ * Copyright (C) 2013-2022 Sensnology AB
  * Full contributor list: https://github.com/mysensors/MySensors/graphs/contributors
  *
  * Documentation: http://www.mysensors.org
@@ -288,8 +288,8 @@
  * @def CAN_CS
  * @brief Chip select pin.
  */
-#ifndef CAN_CS
-#define CAN_CS (10u)
+#ifndef MY_CAN_CS // TODO: By convention all MySensors defines should start with "MY_"
+#define MY_CAN_CS (10u)
 #endif
 /**
  * @def CAN_SPEED

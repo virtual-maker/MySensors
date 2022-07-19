@@ -1,3 +1,28 @@
+/*
+ * The MySensors Arduino library handles the wireless radio link and protocol
+ * between your home built sensors/actuators and HA controller of choice.
+ * The sensors forms a self healing radio network with optional repeaters. Each
+ * repeater and gateway builds a routing tables in EEPROM which keeps track of the
+ * network topology allowing messages to be routed to nodes.
+ *
+ * Created by Henrik Ekblad <henrik.ekblad@mysensors.org>
+ * Copyright (C) 2013-2022 Sensnology AB
+ * Full contributor list: https://github.com/mysensors/MySensors/graphs/contributors
+ *
+ * Documentation: http://www.mysensors.org
+ * Support Forum: http://forum.mysensors.org
+ *
+ * CAN bus transport added by Adam Slovik <your-email-here> // TODO
+ * Copyright (C) 2022 Adam Slovik
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ */
+
+#define CAN_CS MY_CAN_CS
+// TODO: Add other CAN driver configuration defines here
+
 #include "hal/transport/CAN/driver/mcp_can.h"
 #include "hal/transport/CAN/driver/mcp_can.cpp"
 #include "MyTransportCAN.h"
@@ -61,7 +86,7 @@ bool _initFilters()
 
 bool transportInit(void)
 {
-	CAN_DEBUG(PSTR("CAN:INIT:CS=%" PRIu8 ",INT=%" PRIu8 ",SPE=%" PRIu8 ",CLO=%" PRIu8 "\n"), CAN_CS,
+	CAN_DEBUG(PSTR("CAN:INIT:CS=%" PRIu8 ",INT=%" PRIu8 ",SPE=%" PRIu8 ",CLK=%" PRIu8 "\n"), CAN_CS,
 	          CAN_INT, CAN_SPEED, CAN_CLOCK);
 
 	if (CAN0.begin(MCP_STDEXT, CAN_SPEED, CAN_CLOCK) != CAN_OK) {
@@ -122,13 +147,19 @@ uint8_t _findCanPacketSlot(long unsigned int from, long unsigned int currentPart
 	uint8_t slot = CAN_BUF_SIZE;
 	uint8_t i;
 	for (i = 0; i < CAN_BUF_SIZE; i++) {
+#if defined(MY_DEBUG_VERBOSE_CAN_INTERNAL)
+		// Debug message only needed for debug of packet slot algorithm
+		// and to verbose for normal debug of CAN transport
 		CAN_DEBUG(PSTR("CAN:RCV:LCK=%" PRIu8 ",ADDR=%" PRIu8
 		               ",PACK_ID=%" PRIu8 ",LAST_PART=%" PRIu8 "\n"), packets[i].locked, packets[i].address,
 		          packets[i].packetId,
 		          packets[i].lastReceivedPart);
+#endif
 		if (packets[i].locked && packets[i].address == from && packets[i].packetId == messageId &&
 		        packets[i].lastReceivedPart == currentPart) {
 			slot = i;
+			// End search when matching slot was found
+			break;
 		}
 	}
 	if (slot == CAN_BUF_SIZE) {
@@ -287,6 +318,8 @@ uint8_t transportReceive(void *data)
 void transportSetAddress(const uint8_t address)
 {
 	_nodeId = address;
+	// Update filter settings with new node address
+	_initFilters();
 }
 
 uint8_t transportGetAddress(void)
