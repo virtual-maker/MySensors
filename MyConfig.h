@@ -274,9 +274,14 @@
 //#define MY_CAN
 /**
  * @def MY_DEBUG_VERBOSE_CAN
- * @brief Define this for verbose debug prints related to the %CAN driver.
+ * @brief Define this for verbose debug prints related to the %CAN transport.
  */
 //#define MY_DEBUG_VERBOSE_CAN
+/**
+ * @def MY_DEBUG_VERBOSE_CAN_INTERNAL
+ * @brief Define this for verbose debug prints related to %CAN transport sub packet handling.
+ */
+//#define MY_DEBUG_VERBOSE_CAN_INTERNAL
 /**
  * @def MY_CAN_INT
  * @brief Message arrived interrupt pin.
@@ -2343,7 +2348,11 @@
 #define MY_DEBUG_VERBOSE_OTA_UPDATE //!< MY_DEBUG_VERBOSE_OTA_UPDATE
 #endif
 
-#if defined(MY_DEBUG) || defined(MY_DEBUG_VERBOSE_CORE) || defined(MY_DEBUG_VERBOSE_TRANSPORT) || defined(MY_DEBUG_VERBOSE_GATEWAY) || defined(MY_DEBUG_VERBOSE_SIGNING) || defined(MY_DEBUG_VERBOSE_OTA_UPDATE) || defined(MY_DEBUG_VERBOSE_RF24) || defined(MY_DEBUG_VERBOSE_NRF5_ESB) || defined(MY_DEBUG_VERBOSE_RFM69) || defined(MY_DEBUG_VERBOSE_RFM95) || defined(MY_DEBUG_VERBOSE_TRANSPORT_HAL)
+#if defined(MY_DEBUG) || defined(MY_DEBUG_VERBOSE_CORE) || defined(MY_DEBUG_VERBOSE_TRANSPORT) || \
+defined(MY_DEBUG_VERBOSE_GATEWAY) || defined(MY_DEBUG_VERBOSE_SIGNING) || defined(MY_DEBUG_VERBOSE_OTA_UPDATE) || \
+defined(MY_DEBUG_VERBOSE_RF24) || defined(MY_DEBUG_VERBOSE_NRF5_ESB) || defined(MY_DEBUG_VERBOSE_RFM69) || \
+defined(MY_DEBUG_VERBOSE_RFM95) || defined(MY_DEBUG_VERBOSE_PJON) || defined(MY_DEBUG_VERBOSE_CAN) || \
+defined(MY_DEBUG_VERBOSE_TRANSPORT_HAL)
 #define DEBUG_OUTPUT_ENABLED	//!< DEBUG_OUTPUT_ENABLED
 #ifndef MY_DEBUG_OTA
 #define DEBUG_OUTPUT(x,...)		hwDebugPrint(x, ##__VA_ARGS__)	//!< debug
@@ -2548,6 +2557,12 @@
 // CAN
 #define MY_CAN
 #define MY_DEBUG_VERBOSE_CAN
+#define MY_DEBUG_VERBOSE_CAN_INTERNAL
+#define MY_CAN_INT
+#define MY_CAN_CS
+#define MY_CAN_SPEED
+#define MY_CAN_CLOCK
+#define MY_CAN_BUF_SIZE
 // RF24
 #define MY_RADIO_RF24
 #define MY_RADIO_NRF24 //deprecated

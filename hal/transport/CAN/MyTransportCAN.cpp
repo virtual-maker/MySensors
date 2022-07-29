@@ -107,10 +107,10 @@ void _cleanSlot(uint8_t slot)
 	packets[slot].age = 0;
 	packets[slot].packetId = 0;
 	packets[slot].ready = false;
-	packets[slot].packetReceived[0]=false;
-	packets[slot].packetReceived[1]=false;
-	packets[slot].packetReceived[2]=false;
-	packets[slot].packetReceived[3]=false;
+	packets[slot].packetReceived[0] = false;
+	packets[slot].packetReceived[1] = false;
+	packets[slot].packetReceived[2] = false;
+	packets[slot].packetReceived[3] = false;
 }
 
 //find empty slot in buffer
@@ -149,10 +149,8 @@ uint8_t _findCanPacketSlot(long unsigned int from, long unsigned int currentPart
 	uint8_t i;
 	for (i = 0; i < MY_CAN_BUF_SIZE; i++) {
 #if defined(MY_DEBUG_VERBOSE_CAN_INTERNAL)
-		CAN_DEBUG(PSTR("CAN:RCV:LCK=%" PRIu8 ",ADDR=%" PRIu8
-		               ",PACK_ID=%" PRIu8 ",RCV_PARTS=%" PRIu8 "\n"), packets[i].locked, packets[i].address,
-		          packets[i].packetId,
-		          packets[i].totalReceivedParts);
+		CAN_DEBUG(PSTR("CAN:RCV:LCK=%" PRIu8 ",ADDR=%" PRIu8 ",PACK_ID=%" PRIu8 ",RCV_PARTS=%" PRIu8 "\n"),
+		          packets[i].locked, packets[i].address, packets[i].packetId, packets[i].totalReceivedParts);
 #endif
 		if (packets[i].locked && packets[i].address == from && packets[i].packetId == messageId &&
 		        packets[i].packetReceived[currentPart] == false) {
@@ -247,7 +245,6 @@ bool transportDataAvailable(void)
 	if (!hwDigitalRead(MY_CAN_INT)) {             // If CAN_INT pin is low, read receive buffer
 		CAN0.readMsgBuf(&rxId, &len, rxBuf);      // Read data: len = data length, buf = data byte(s)
 		long unsigned int from = (rxId & 0x000000FF);
-		// cppcheck-suppress unreadVariable
 		long unsigned int currentPart = (rxId & 0x000F0000) >> 16;
 		long unsigned int totalPartCount = (rxId & 0x00F00000) >> 20;
 		long unsigned int messageId = (rxId & 0x07000000) >> 24;
@@ -268,24 +265,24 @@ bool transportDataAvailable(void)
 			packets[slot].address = from;
 			packets[slot].packetId = messageId;
 		}
-		memcpy(packets[slot].data + currentPart*8, rxBuf, len);
+		memcpy(packets[slot].data + currentPart * 8, rxBuf, len);
 		packets[slot].totalReceivedParts++;
 		packets[slot].len += len;
-		packets[slot].packetReceived[currentPart]=true;
+		packets[slot].packetReceived[currentPart] = true;
 		CAN_DEBUG(PSTR("CAN:RCV:SLOT=%" PRIu8 ",PART=%" PRIu8 "\n"), slot,
 		          packets[slot].totalReceivedParts);
 		uint8_t i;
-		boolean ready = true;
+		bool ready = true;
 		for (i = 0; i < totalPartCount; i++) {
-			if (packets[slot].packetReceived[i]==false) {
-				ready=false;
+			if (packets[slot].packetReceived[i] == false) {
+				ready = false;
 				break;
 			}
 		}
 		if (ready) {
 			CAN_DEBUG(PSTR("CAN:RCV:SLOT=%" PRIu8 " complete\n"), slot);
 		}
-		packets[slot].ready=ready;
+		packets[slot].ready = ready;
 		return ready;
 	}
 	return false;
