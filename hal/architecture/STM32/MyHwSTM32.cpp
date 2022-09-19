@@ -12,6 +12,11 @@
  * Documentation: http://www.mysensors.org
  * Support Forum: http://forum.mysensors.org
  *
+ * STM32 architecture support added by Alexander KooLru <kool@kool.ru>
+ * Copyright (C) 2022 Alexander KooLru
+ * STM32 sleep mode and EEPROM support added by WhiskyDelta <arne.schwarz@d2a.de>
+ * Copyright (C) 2022 Arne Schwarz
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * version 2 as published by the Free Software Foundation.
@@ -125,7 +130,7 @@ int8_t hwSleep(uint32_t ms)
 	// Return what woke the mcu.
 	// Default: no interrupt triggered, timer wake up
 	int8_t ret = MY_WAKE_UP_BY_TIMER;
-	
+
 	if (ms > 0u) {
 		// sleep for defined time
 		LowPower.deepSleep(ms);
@@ -153,7 +158,7 @@ int8_t hwSleep(const uint8_t interrupt1, const uint8_t mode1, const uint8_t inte
 {
 	// According to STM32LowPower API following modes to wake from sleep are supported: HIGH, LOW, RISING, FALLING or CHANGE
 	// Ref: https://github.com/stm32duino/STM32LowPower
-	
+
 	// attach interrupts
 	_wakeUp1Interrupt  = interrupt1;
 	_wakeUp2Interrupt  = interrupt2;
@@ -164,7 +169,7 @@ int8_t hwSleep(const uint8_t interrupt1, const uint8_t mode1, const uint8_t inte
 	if (interrupt2 != INVALID_INTERRUPT_NUM) {
 		LowPower.attachInterruptWakeup(interrupt2, wakeUp2, mode2, DEEP_SLEEP_MODE);
 	}
-	
+
 	if (ms > 0u) {
 		// sleep for defined time
 		return hwSleep(ms);

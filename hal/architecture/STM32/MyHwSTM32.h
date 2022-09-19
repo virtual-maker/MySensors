@@ -12,6 +12,11 @@
  * Documentation: http://www.mysensors.org
  * Support Forum: http://forum.mysensors.org
  *
+ * STM32 architecture support added by Alexander KooLru <kool@kool.ru>
+ * Copyright (C) 2022 Alexander KooLru
+ * STM32 sleep mode and EEPROM support added by WhiskyDelta <arne.schwarz@d2a.de>
+ * Copyright (C) 2022 Arne Schwarz
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * version 2 as published by the Free Software Foundation.

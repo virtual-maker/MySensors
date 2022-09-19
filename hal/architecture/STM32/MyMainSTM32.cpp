@@ -1,4 +1,4 @@
-﻿/*
+/*
  * The MySensors Arduino library handles the wireless radio link and protocol
  * between your home built sensors/actuators and HA controller of choice.
  * The sensors forms a self healing radio network with optional repeaters. Each
@@ -11,6 +11,9 @@
  *
  * Documentation: http://www.mysensors.org
  * Support Forum: http://forum.mysensors.org
+ *
+ * STM32 architecture support added by Alexander KooLru <kool@kool.ru>
+ * Copyright (C) 2022 Alexander KooLru
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
