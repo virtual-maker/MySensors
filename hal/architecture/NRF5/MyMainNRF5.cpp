@@ -6,7 +6,7 @@
  * network topology allowing messages to be routed to nodes.
  *
  * Created by Henrik Ekblad <henrik.ekblad@mysensors.org>
- * Copyright (C) 2013-2022 Sensnology AB
+ * Copyright (C) 2013-2023 Sensnology AB
  * Full contributor list: https://github.com/mysensors/MySensors/graphs/contributors
  *
  * Documentation: http://www.mysensors.org
@@ -17,23 +17,29 @@
  * version 2 as published by the Free Software Foundation.
  */
 
-// Initialize library and handle sketch functions like we want to
-
-int main(void)
+inline void _my_sensors_loop()
 {
-	init();
-#if defined(USBCON)
-	USBDevice.attach();
-#endif
-	_begin(); // Startup MySensors library
-	for(;;) {
-		_process();  // Process incoming data
-		if (loop) {
-			loop(); // Call sketch loop
-		}
-		if (serialEventRun) {
-			serialEventRun();
-		}
-	}
-	return 0;
+	// Process incoming data
+	_process();
+	// Call of loop() in the Arduino sketch
+	loop();
 }
+
+/*
+ * Use preprocessor defines for injection of the MySensors calls
+ * to _begin() and _process() into default Main file.
+ * These functions implement the "magic" how the MySensors stack
+ * is setup and executed in background without need
+ * for explicit calls from the Arduino sketch.
+ */
+
+// Start up MySensors library including call of setup() in the Arduino sketch
+#define setup _begin
+// Helper function to _process() and call of loop() in the Arduino sketch
+#define loop _my_sensors_loop
+
+#include <main.cpp>
+
+// Tidy up injection defines
+#undef loop
+#undef setup

@@ -26,6 +26,11 @@
 #include <Arduino.h>
 #endif
 
+// Use USB for serial connection with XIAO nRF52840 (Sense)
+#ifdef NRF52840_XXAA
+#include <Adafruit_TinyUSB.h>
+#endif
+
 #define CRYPTO_LITTLE_ENDIAN
 
 #ifndef MY_SERIALDEVICE
@@ -47,6 +52,23 @@
 #ifndef ARDUINO_ARCH_NRF5
 #define ARDUINO_ARCH_NRF5
 #endif
+
+// Define NRF5, if not defined
+#ifndef NRF5
+#define NRF5
+#endif
+
+// Add missing defines for XIAO nRF52840 (Sense)
+#ifdef NRF52840_XXAA
+// Define NRF52, if not defined
+#ifndef NRF52
+#define NRF52
+#endif
+// Define NRF52840, if not defined
+#ifndef NRF52840
+#define NRF52840
+#endif
+#endif // NRF52840_XXAA
 
 #include "hal/architecture/NRF5/drivers/nrf5_wiring_digital.c"
 #include "hal/architecture/NRF5/drivers/wdt.h"

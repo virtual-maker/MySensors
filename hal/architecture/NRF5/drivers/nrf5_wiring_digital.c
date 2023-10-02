@@ -32,11 +32,12 @@ void nrf5_pinMode(uint32_t ulPin, uint32_t ulMode)
 		return;
 	}
 
-#ifdef ARDUINO_ARCH_NRF52
+#if defined(ARDUINO_ARCH_NRF52) && !defined(NRF52840_XXAA)
 	// Arduino: https://github.com/arduino-org/arduino-core-nrf52
 	ulPin = g_APinDescription[ulPin].ulPin;
 #else
 	// Sandeep Mistry: https://github.com/sandeepmistry/arduino-nRF5
+	// Seeed NRF52 boards: https://github.com/Seeed-Studio/Adafruit_nRF52_Arduino
 	ulPin = g_ADigitalPinMap[ulPin];
 #endif
 
