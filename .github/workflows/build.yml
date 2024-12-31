@@ -130,6 +130,7 @@ jobs:
         exit 1
 
   build-arduino-AVR:
+    ####needs: static-code-tests
     runs-on: ubuntu-latest
 
     steps:
@@ -138,6 +139,11 @@ jobs:
 
     - name: Set up Arduino CLI
       uses: arduino/setup-arduino-cli@master
+
+    - name: Add library symlink to this MySensors repository
+      run: |
+          mkdir -p "$HOME/Arduino/libraries"
+          ln -s "$PWD" "$HOME/Arduino/libraries/."
 
     - name: Install dependencies
       run: |
@@ -150,4 +156,4 @@ jobs:
 
     - name: Compile sketch
       run: |
-        arduino-cli compile --fqbn arduino:avr:uno Projects/Arduino/Blink/Blink.ino
+        arduino-cli compile --fqbn arduino:avr:uno ./examples/LightSensor/LightSensor.ino
