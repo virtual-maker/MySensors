@@ -201,7 +201,7 @@ static void inv_shift_sub_rows (byte st[N_BLOCK])
 
 /* SUB COLUMNS PHASE */
 
-static void mix_sub_columns (byte dt[N_BLOCK], byte st[N_BLOCK])
+static void mix_sub_columns (byte dt[N_BLOCK], const byte st[N_BLOCK])
 {
 	byte j = 5 ;
 	byte k = 10 ;
@@ -223,7 +223,7 @@ static void mix_sub_columns (byte dt[N_BLOCK], byte st[N_BLOCK])
 	}
 }
 
-static void inv_mix_sub_columns (byte dt[N_BLOCK], byte st[N_BLOCK])
+static void inv_mix_sub_columns (byte dt[N_BLOCK], const byte st[N_BLOCK])
 {
 	for (byte i = 0 ; i < N_BLOCK ; i += N_COL) {
 		byte a1 = st [i] ;

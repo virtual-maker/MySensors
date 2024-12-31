@@ -59,7 +59,8 @@ uint8_t atsha204Class::getSerialNumber(uint8_t * response)
 
 /*  Calculates CRC16 value of provided data (and optionally including provided existing CRC16 data)
   returns the calculated CRC16 value */
-uint16_t atsha204Class::calculateAndUpdateCrc(uint8_t length, uint8_t *data, uint16_t current_crc)
+uint16_t atsha204Class::calculateAndUpdateCrc(uint8_t length, const uint8_t *data,
+        uint16_t current_crc)
 {
 	uint8_t counter;
 	uint16_t crc_register = current_crc;
@@ -96,7 +97,7 @@ void atsha204Class::swi_set_signal_pin(uint8_t is_high)
 
 }
 
-uint8_t atsha204Class::swi_send_bytes(uint8_t count, uint8_t *buffer)
+uint8_t atsha204Class::swi_send_bytes(uint8_t count, const uint8_t *buffer)
 {
 	uint8_t i, bit_mask;
 
@@ -707,9 +708,9 @@ uint8_t atsha204Class::sha204m_execute(uint8_t op_code, uint8_t param1, uint16_t
 }
 
 uint8_t atsha204Class::sha204m_check_parameters(uint8_t op_code, uint8_t param1, uint16_t param2,
-        uint8_t datalen1, uint8_t *data1, uint8_t datalen2, uint8_t *data2, uint8_t datalen3,
-        uint8_t *data3,
-        uint8_t tx_size, uint8_t *tx_buffer, uint8_t rx_size, uint8_t *rx_buffer)
+        uint8_t datalen1, const uint8_t *data1, uint8_t datalen2, const uint8_t *data2, uint8_t datalen3,
+        const uint8_t *data3, uint8_t tx_size, const uint8_t *tx_buffer, uint8_t rx_size,
+        const uint8_t *rx_buffer)
 {
 #ifdef SHA204_CHECK_PARAMETERS
 

@@ -214,7 +214,7 @@ Remarks: By using the slope and a point of the line. The x(logarithmic value of 
          logarithmic coordinate, power of 10 is used to convert the result to non-logarithmic
          value.
 ************************************************************************************/
-int  MQGetPercentage(float rs_ro_ratio, float *pcurve)
+int  MQGetPercentage(float rs_ro_ratio, const float *pcurve)
 {
 	return (pow(10,( ((log(rs_ro_ratio)-pcurve[1])/pcurve[2]) + pcurve[0])));
 }
