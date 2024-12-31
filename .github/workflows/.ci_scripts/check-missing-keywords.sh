@@ -51,9 +51,11 @@ result=1
 fi
 
 # Evaluate if there exists booleans in the code tree (not counting this file)
-if git grep -q boolean -- `git ls-files | grep -v check-missing-keywords.sh`; then
+####if git grep -q boolean -- `git ls-files | grep -v check-missing-keywords.sh`; then
+if git grep -q boolean -- `git ls-files | grep -v check-missing-keywords.sh | grep -v '^\.ci/'`; then
   echo "Booleans in the code tree:"
-  git grep boolean -- `git ls-files | grep -v check-missing-keywords.sh`
+  ####git grep boolean -- `git ls-files | grep -v check-missing-keywords.sh`
+	git grep -q boolean -- `git ls-files | grep -v check-missing-keywords.sh | grep -v '^\.ci/'`
 	echo "grep test end"
 
   echo "You have added at least one occurence of the deprecated boolean data type. Please use bool instead." > booleans.txt
