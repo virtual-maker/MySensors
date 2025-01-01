@@ -1,0 +1,8 @@
+examples/GatewayESP8266/GatewayESP8266.ino
+examples/GatewayESP8266MQTTClient/GatewayESP8266MQTTClient.ino
+examples/GatewayESP8266SecureMQTTClient/GatewayESP8266SecureMQTTClient.ino
+examples/GatewayESP8266OTA/GatewayESP8266OTA.ino
+examples/GatewayESP32/GatewayESP32.ino
+examples/GatewayESP32OTA/GatewayESP32OTA.ino
+examples/GatewayESP32MQTTClient/GatewayESP32MQTTClient.ino
+examples/SensebenderGatewaySerial/SensebenderGatewaySerial.ino

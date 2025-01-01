@@ -157,3 +157,6 @@ jobs:
     - name: Compile sketch
       run: |
         arduino-cli compile --fqbn arduino:avr:uno ./examples/LightSensor/LightSensor.ino
+
+    - name: Compile all sketches from examples folder
+      run: ./.github/workflows/.ci_scripts/compile-arduino-AVR-UNO-sketches.sh
