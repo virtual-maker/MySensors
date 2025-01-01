@@ -38,4 +38,4 @@ find "$SKETCHES" -name "*.ino" | while read sketch; do
 done
 
 # Exit with error state
-exit $error_state
+exit result
