@@ -137,6 +137,9 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Set execute permissions for shell scripts
+      run: chmod +x ./.github/workflows/.ci_scripts/*.sh
+
     - name: Set up Arduino CLI
       uses: arduino/setup-arduino-cli@master
 
@@ -149,10 +152,7 @@ jobs:
       run: |
         arduino-cli core update-index
         arduino-cli core install arduino:avr
-        arduino-cli lib install "Firmata"
-        #arduino-cli lib install "Wire"
-        #arduino-cli lib install "SPI"
-        arduino-cli lib install "Servo"
+        # arduino-cli lib install "Servo" # Uncomment if you need to install a library
 
     - name: Compile sketch
       run: |
