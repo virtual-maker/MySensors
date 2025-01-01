@@ -1,8 +1,11 @@
 #!/bin/bash
 
+# Define the path to the blacklist file
+EXCLUDES_FILE="./.github/workflows/.ci_scripts/Arduino-AVR-UNO-excludes"
+
 # Read the blacklist file into an array
-if [ -f Arduino-AVR-excludes ]; then
-  mapfile -t excludes < ./.github/workflows/.ci_scripts/Arduino-AVR-UNO-excludes
+if [ -f "$EXCLUDES_FILE" ]; then
+  mapfile -t excludes < "$EXCLUDES_FILE"
 else
   excludes=()
 fi
