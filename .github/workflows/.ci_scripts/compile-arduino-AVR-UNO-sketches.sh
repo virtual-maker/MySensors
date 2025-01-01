@@ -2,7 +2,7 @@
 
 # Read the blacklist file into an array
 if [ -f Arduino-AVR-excludes ]; then
-  mapfile -t excludes < Arduino-AVR-UNO-excludes
+  mapfile -t excludes < ./.github/workflows/.ci_scripts/Arduino-AVR-UNO-excludes
 else
   excludes=()
 fi
