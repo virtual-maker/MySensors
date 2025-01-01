@@ -167,7 +167,7 @@ jobs:
         # path to the Arduino sketches directory
         SKETCHES="./tests"
         # Define the path to the blacklist file
-        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-UNO-excludes"
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-excludes"
         # Run the script to compile all sketches
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
@@ -175,7 +175,7 @@ jobs:
       run: |
         FQBN="arduino:avr:uno"
         SKETCHES="./examples"
-        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-UNO-excludes"
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
     # Arduino AVR MEGA  
@@ -183,14 +183,14 @@ jobs:
       run: |
         FQBN="arduino:avr:mega:cpu=atmega2560"
         SKETCHES="./tests"
-        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-UNO-excludes"
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
     - name: Compile ArduinoMega (examples)
       run: |
         FQBN="arduino:avr:mega:cpu=atmega2560"
         SKETCHES="./examples"
-        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-UNO-excludes"
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
   build-arduino-ESP32:
