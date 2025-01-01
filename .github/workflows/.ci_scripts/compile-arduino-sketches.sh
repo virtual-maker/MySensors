@@ -40,6 +40,9 @@ find "$SKETCHES" -name "*.ino" | while read sketch; do
 done
 
 # Exit with error state
-if [ $result -ne 0 ]; then
-  exit 1
-fi
+echo "result: $result"
+exit $result
+
+#if [ $result -ne 0 ]; then
+#  exit 1
+#fi
