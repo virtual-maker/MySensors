@@ -158,7 +158,7 @@ jobs:
     #- name: Compile a single and specific sketch
     #  run: |
     #    arduino-cli compile --fqbn arduino:avr:uno ./examples/LightSensor/LightSensor.ino
-
+    # Arduino AVR UNO
     - name: Compile ArduinoUno (tests)
       run: |
         # Fully Qualified Board Name (FQBN) of the board to compile for
@@ -173,6 +173,21 @@ jobs:
     - name: Compile ArduinoUno (examples)
       run: |
         FQBN="arduino:avr:uno"
+        SKETCHES="./examples"
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-UNO-excludes"
+        ./.github/workflows/.ci_scripts/compile-arduino-AVR-UNO-sketches.sh $FQBN $SKETCHES $EXCLUDES
+
+    # Arduino AVR MEGA  
+    - name: Compile ArduinoMega (tests)
+      run: |
+        FQBN="arduino:avr:mega:cpu=atmega2560"
+        SKETCHES="./tests"
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-UNO-excludes"
+        ./.github/workflows/.ci_scripts/compile-arduino-AVR-UNO-sketches.sh $FQBN $SKETCHES $EXCLUDES
+
+    - name: Compile ArduinoMega (examples)
+      run: |
+        FQBN="arduino:avr:mega:cpu=atmega2560"
         SKETCHES="./examples"
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-UNO-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-AVR-UNO-sketches.sh $FQBN $SKETCHES $EXCLUDES
