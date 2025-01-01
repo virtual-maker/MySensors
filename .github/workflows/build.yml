@@ -130,7 +130,7 @@ jobs:
         exit 1
 
   build-arduino-AVR:
-    ####needs: static-code-tests
+    needs: static-code-tests
     runs-on: ubuntu-latest
 
     steps:
