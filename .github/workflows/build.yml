@@ -154,16 +154,25 @@ jobs:
         arduino-cli core install arduino:avr
         arduino-cli lib install "Ethernet"
 
-    - name: Compile a single and specific sketch
-      run: |
-        arduino-cli compile --fqbn arduino:avr:uno ./examples/LightSensor/LightSensor.ino
+    #### Example of compiling a single sketch
+    #- name: Compile a single and specific sketch
+    #  run: |
+    #    arduino-cli compile --fqbn arduino:avr:uno ./examples/LightSensor/LightSensor.ino
 
-    - name: Compile all sketches from examples folder
+    - name: Compile ArduinoUno (tests)
       run: |
         # Fully Qualified Board Name (FQBN) of the board to compile for
         FQBN="arduino:avr:uno"
         # path to the Arduino sketches directory
-        SKETCHES="./examples"
+        SKETCHES="./tests"
         # Define the path to the blacklist file
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-UNO-excludes"
+        # Run the script to compile all sketches
+        ./.github/workflows/.ci_scripts/compile-arduino-AVR-UNO-sketches.sh $FQBN $SKETCHES $EXCLUDES
+
+    - name: Compile ArduinoUno (examples)
+      run: |
+        FQBN="arduino:avr:uno"
+        SKETCHES="./examples"
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-UNO-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-AVR-UNO-sketches.sh $FQBN $SKETCHES $EXCLUDES
