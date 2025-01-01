@@ -27,8 +27,10 @@ find "$SKETCHES" -name "*.ino" | while read sketch; do
   if ! grep -Fxq "$sketch" "$BLACKLIST_FILE"; then
     echo "Compiling $sketch"
     arduino-cli compile --fqbn "$FQBN" "$sketch" --warnings more
-		compile_result=$?
+    compile_result=$?
+    echo "compile_result: $compile_result"
     if [ $compile_result -ne 0 ]; then
+      echo "Compilation failed for $sketch"
       result=1
     fi
 

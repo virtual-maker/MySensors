@@ -276,7 +276,6 @@ jobs:
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
     - name: Compile MysensorsMicro (examples)
-      if: ${{ steps.cppcheck_avr.outcome == 'failure' }}
       run: |
         FQBN="MySensors:avr:MysensorsMicro:cpu=1Mhz"
         SKETCHES="./examples"
