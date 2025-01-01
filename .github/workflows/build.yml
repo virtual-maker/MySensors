@@ -266,6 +266,7 @@ jobs:
         arduino-cli core install MySensors:avr
         arduino-cli core install MySensors:samd
         arduino-cli lib install "Ethernet"
+        arduino-cli lib install "SD"
 
     # MySensors AVR MysensorsMicro
     - name: Compile MysensorsMicro (tests)
