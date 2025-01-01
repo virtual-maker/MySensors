@@ -263,6 +263,7 @@ jobs:
         arduino-cli core update-index
         arduino-cli core install arduino:avr
         arduino-cli core install arduino:samd
+        arduino-cli core install MySensors:avr
         arduino-cli core install MySensors:samd
         arduino-cli lib install "Ethernet"
 
@@ -273,15 +274,14 @@ jobs:
         SKETCHES="./tests"
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
-        continue-on-error: true
 
     - name: Compile MysensorsMicro (examples)
+      if: ${{ steps.cppcheck_avr.outcome == 'failure' }}
       run: |
         FQBN="MySensors:avr:MysensorsMicro:cpu=1Mhz"
         SKETCHES="./examples"
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
-        continue-on-error: true
 
     # MySensors AVR MySensorsGW  
     - name: Compile MySensorsGW (tests)
@@ -290,7 +290,6 @@ jobs:
         SKETCHES="./tests"
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
-        continue-on-error: true
 
     - name: Compile MySensorsGW (examples)
       run: |
@@ -298,4 +297,3 @@ jobs:
         SKETCHES="./examples"
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
-
