@@ -32,6 +32,7 @@ find "$SKETCHES" -name "*.ino" | while read sketch; do
     if [ $compile_result -ne 0 ]; then
       echo "Compilation failed for $sketch"
       result=1
+			echo "result: $result"
     fi
 
   else
