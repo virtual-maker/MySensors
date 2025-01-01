@@ -9,15 +9,16 @@ EXCLUDES="$3" # "./.github/workflows/.ci_scripts/Arduino-AVR-UNO-excludes"
 
 # Read the blacklist file into an array
 if [ -f "$EXCLUDES" ]; then
-  mapfile -t excludes < "$EXCLUDES"
+  #mapfile -t excludes < "$EXCLUDES"
+	mapfile -t excludes < <(grep -vE '^\s*#|^\s*$' "$EXCLUDES")
 else
   excludes=()
 fi
 
 #### Debugging output
-#echo "Excluded files:"
-#echo "${excludes[@]}"
-#echo "<END>"
+echo "Excluded files:"
+echo "${excludes[@]}"
+echo "<END>"
 
 # Find all .ino files and compile each one, excluding those in the blacklist
 #find ./examples -name "*.ino" | while read sketch; do
