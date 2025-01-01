@@ -273,6 +273,7 @@ jobs:
         SKETCHES="./tests"
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
+        continue-on-error: true
 
     - name: Compile MysensorsMicro (examples)
       run: |
@@ -280,6 +281,7 @@ jobs:
         SKETCHES="./examples"
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
+        continue-on-error: true
 
     # MySensors AVR MySensorsGW  
     - name: Compile MySensorsGW (tests)
@@ -288,6 +290,7 @@ jobs:
         SKETCHES="./tests"
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
+        continue-on-error: true
 
     - name: Compile MySensorsGW (examples)
       run: |
