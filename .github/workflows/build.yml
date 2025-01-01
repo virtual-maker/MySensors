@@ -130,7 +130,7 @@ jobs:
         exit 1
 
   build-arduino-AVR:
-    needs: static-code-tests
+    #needs: static-code-tests
     runs-on: ubuntu-latest
 
     steps:
@@ -154,9 +154,16 @@ jobs:
         arduino-cli core install arduino:avr
         arduino-cli lib install "Ethernet"
 
-    - name: Compile sketch
+    - name: Compile a single and specific sketch
       run: |
         arduino-cli compile --fqbn arduino:avr:uno ./examples/LightSensor/LightSensor.ino
 
     - name: Compile all sketches from examples folder
-      run: ./.github/workflows/.ci_scripts/compile-arduino-AVR-UNO-sketches.sh
+      run: |
+        # Fully Qualified Board Name (FQBN) of the board to compile for
+        FQBN="arduino:avr:uno"
+        # path to the Arduino sketches directory
+        SKETCHES="./examples"
+        # Define the path to the blacklist file
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-UNO-excludes"
+        ./.github/workflows/.ci_scripts/compile-arduino-AVR-UNO-sketches.sh $FQBN $SKETCHES $EXCLUDES
