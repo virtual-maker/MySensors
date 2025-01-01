@@ -23,7 +23,7 @@ echo "<END>"
 
 # Find all .ino files and compile each one, excluding those in the blacklist
 exit_result=0
-find "$SKETCHES" -name "*.ino" | while read sketch; do
+while read sketch; do
   if ! grep -Fxq "$sketch" "$BLACKLIST_FILE"; then
     echo "Compiling $sketch"
     arduino-cli compile --fqbn "$FQBN" "$sketch" --warnings more
@@ -34,11 +34,10 @@ find "$SKETCHES" -name "*.ino" | while read sketch; do
       exit_result=1
     fi
     echo "result: $exit_result"
-
   else
     echo "Skipping $sketch (blacklisted)"
   fi
-done
+done < <(find "$SKETCHES" -name "*.ino")
 
 # Exit with error state
 echo "result: $exit_result"
