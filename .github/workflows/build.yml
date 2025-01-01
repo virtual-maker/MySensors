@@ -159,6 +159,7 @@ jobs:
     #  run: |
     #    arduino-cli compile --fqbn arduino:avr:uno ./examples/LightSensor/LightSensor.ino
     # Arduino AVR UNO
+
     - name: Compile ArduinoUno (tests)
       run: |
         # Fully Qualified Board Name (FQBN) of the board to compile for
@@ -190,4 +191,45 @@ jobs:
         FQBN="arduino:avr:mega:cpu=atmega2560"
         SKETCHES="./examples"
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-UNO-excludes"
+        ./.github/workflows/.ci_scripts/compile-arduino-AVR-UNO-sketches.sh $FQBN $SKETCHES $EXCLUDES
+
+  build-arduino-ESP32:
+    #needs: static-code-tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set execute permissions for shell scripts
+      run: chmod +x ./.github/workflows/.ci_scripts/*.sh
+
+    - name: Set up Arduino CLI
+      uses: arduino/setup-arduino-cli@master
+
+    - name: Add library symlink to this MySensors repository
+      run: |
+          mkdir -p "$HOME/Arduino/libraries"
+          ln -s "$PWD" "$HOME/Arduino/libraries/."
+
+    - name: Install dependencies
+      run: |
+        arduino-cli config add board_manager.additional_urls https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_dev_index.json
+        arduino-cli core update-index
+        arduino-cli core install esp32:esp32
+        #arduino-cli lib install "Ethernet"
+
+    - name: Compile ESP32 (tests)
+      run: |
+        FQBN="esp32:esp32:esp32:PSRAM=disabled,PartitionScheme=default,CPUFreq=240,FlashMode=qio,FlashFreq=80,FlashSize=4M,UploadSpeed=921600,DebugLevel=none"
+        SKETCHES="./tests"
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-ESP32-excludes"
+        #### ToDo: Change script name to compile-arduino-sketches.sh
+        ./.github/workflows/.ci_scripts/compile-arduino-AVR-UNO-sketches.sh $FQBN $SKETCHES $EXCLUDES
+
+    - name: Compile ESP32 (examples)
+      run: |
+        FQBN="esp32:esp32:esp32:PSRAM=disabled,PartitionScheme=default,CPUFreq=240,FlashMode=qio,FlashFreq=80,FlashSize=4M,UploadSpeed=921600,DebugLevel=none"
+        SKETCHES="./examples"
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-ESP32-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-AVR-UNO-sketches.sh $FQBN $SKETCHES $EXCLUDES

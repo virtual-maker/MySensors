@@ -33,7 +33,7 @@ fi
 find "$SKETCHES" -name "*.ino" | while read sketch; do
   if [[ ! " ${excludes[@]} " =~ " ${sketch} " ]]; then
     echo "Compiling $sketch"
-    arduino-cli compile --fqbn "$FQBN" "$sketch"
+    arduino-cli compile --fqbn "$FQBN" "$sketch" --warnings more
   else
     echo "Skipping $sketch (blacklisted)"
   fi
