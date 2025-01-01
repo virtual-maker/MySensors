@@ -66,7 +66,7 @@ jobs:
       run: ./.github/workflows/.ci_scripts/check-commit-message.sh
 
   static-code-tests:
-    if: false  # This will deactivate the job
+    #if: false  # This will deactivate the job
     runs-on: ubuntu-latest
 
     steps:
@@ -131,7 +131,7 @@ jobs:
         exit 1
 
   build-arduino-AVR:
-    #needs: static-code-tests
+    needs: static-code-tests
     if: false  # This will deactivate the job
     runs-on: ubuntu-latest
 
@@ -196,7 +196,7 @@ jobs:
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
   build-arduino-ESP32:
-    #needs: static-code-tests
+    needs: static-code-tests
     if: false  # This will deactivate the job
     runs-on: ubuntu-latest
 
@@ -238,7 +238,7 @@ jobs:
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
   build-arduino-MySensors:
-    #needs: static-code-tests
+    needs: static-code-tests
     if: true # false  # This will deactivate the job
     runs-on: ubuntu-latest
 
