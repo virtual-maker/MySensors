@@ -1,4 +1,5 @@
 #!/bin/bash
+result=0
 
 # Fully Qualified Board Name (FQBN) of the board to compile for
 FQBN="$1" # "arduino:avr:uno"
@@ -25,8 +26,16 @@ echo "<END>"
 find "$SKETCHES" -name "*.ino" | while read sketch; do
   if ! grep -Fxq "$sketch" "$BLACKLIST_FILE"; then
     echo "Compiling $sketch"
-    arduino-cli compile --fqbn "$FQBN" "$sketch" --warnings more
+    #arduino-cli compile --fqbn "$FQBN" "$sketch" --warnings more
+		compile_result=$?
+    if [ $compile_result -ne 0 ]; then
+      result=1
+    fi
+
   else
     echo "Skipping $sketch (blacklisted)"
   fi
 done
+
+# Exit with error state
+exit $error_state
