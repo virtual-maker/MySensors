@@ -282,17 +282,17 @@ jobs:
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
-    # MySensors AVR MySensorsGW  
+    # MySensors SAMD MySensorsGW  
     - name: Compile MySensorsGW (tests)
       run: |
         FQBN="MySensors:samd:mysensors_gw_native"
         SKETCHES="./tests"
-        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-excludes"
+        EXCLUDES="./.github/workflows/.ci_scripts/MySensors-SAMD-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
     - name: Compile MySensorsGW (examples)
       run: |
         FQBN="MySensors:samd:mysensors_gw_native"
         SKETCHES="./examples"
-        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-excludes"
+        EXCLUDES="./.github/workflows/.ci_scripts/MySensors-SAMD-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
