@@ -152,7 +152,7 @@ jobs:
       run: |
         arduino-cli core update-index
         arduino-cli core install arduino:avr
-        # arduino-cli lib install "Servo" # Uncomment if you need to install a library
+        arduino-cli lib install "Ethernet"
 
     - name: Compile sketch
       run: |
