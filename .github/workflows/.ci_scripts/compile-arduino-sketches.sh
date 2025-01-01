@@ -33,7 +33,7 @@ find "$SKETCHES" -name "*.ino" | while read sketch; do
       echo "Compilation failed for $sketch"
       exit_result=1
     fi
-    echo "result: exit_result"
+    echo "result: $exit_result"
 
   else
     echo "Skipping $sketch (blacklisted)"
