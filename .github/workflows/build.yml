@@ -407,7 +407,7 @@ jobs:
     - name: Compile Generic_nRF51822 (tests)
       #if: false  # This will deactivate the step
       run: |
-        FQBN="sandeepmistry:nRF5:Generic_nRF51822:softdevice=none,lfclk=lfxo"
+        FQBN="sandeepmistry:nRF5:Generic_nRF51822:chip=xxaa,softdevice=none,lfclk=lfxo
         SKETCHES="./tests"
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-nRF5-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
@@ -415,7 +415,7 @@ jobs:
     - name: Compile Generic_nRF51822 (examples)
       #if: false  # This will deactivate the step
       run: |
-        FQBN="sandeepmistry:nRF5:Generic_nRF51822:softdevice=none,lfclk=lfxo"
+        FQBN="sandeepmistry:nRF5:Generic_nRF51822:chip=xxaa,softdevice=none,lfclk=lfxo
         SKETCHES="./examples"
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-nRF5-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
