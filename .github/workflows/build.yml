@@ -132,7 +132,7 @@ jobs:
 
   build-arduino-AVR:
     needs: static-code-tests
-    if: false  # This will deactivate the job
+    #if: false  # This will deactivate the job
     runs-on: ubuntu-latest
 
     steps:
@@ -197,7 +197,7 @@ jobs:
 
   build-arduino-ESP32:
     needs: static-code-tests
-    if: false  # This will deactivate the job
+    #if: false  # This will deactivate the job
     runs-on: ubuntu-latest
 
     steps:
@@ -239,7 +239,7 @@ jobs:
 
   build-arduino-MySensors:
     needs: static-code-tests
-    if: false  # This will deactivate the job
+    #if: false  # This will deactivate the job
     runs-on: ubuntu-latest
 
     steps:
@@ -377,7 +377,7 @@ jobs:
 
   build-arduino-nRF5:
     needs: static-code-tests    
-    if: false  # This will deactivate the job
+    #if: false  # This will deactivate the job
     runs-on: ubuntu-latest
 
     steps:
@@ -405,7 +405,7 @@ jobs:
 
     # arduino-nRF5 Generic_nRF52832
     - name: Compile Generic_nRF52832 (tests)
-      if: false  # This will deactivate the step
+      #if: false  # This will deactivate the step
       run: |
         FQBN="sandeepmistry:nRF5:Generic_nRF52832:softdevice=none,lfclk=lfxo"
         SKETCHES="./tests"
@@ -413,7 +413,7 @@ jobs:
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
     - name: Compile Generic_nRF52832 (examples)
-      if: false  # This will deactivate the step
+      #if: false  # This will deactivate the step
       run: |
         FQBN="sandeepmistry:nRF5:Generic_nRF52832:softdevice=none,lfclk=lfxo"
         SKETCHES="./examples"
