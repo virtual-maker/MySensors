@@ -49,7 +49,6 @@ jobs:
     needs: get_commits
 
     steps:
-      #### ToDo: Check if the output is correct
     - name: Debug commits output
       run: |
         echo "Commits: ${{ matrix.commit }}"
@@ -130,9 +129,10 @@ jobs:
         echo "::error::C++ Code with errors detected. See detailed report in Artifacts section below."
         exit 1
 
+  # Build Arduino AVR
   build-arduino-AVR:
     needs: static-code-tests
-    #if: false  # This will deactivate the job
+    if: false  # This will deactivate the job
     runs-on: ubuntu-latest
 
     steps:
@@ -195,6 +195,7 @@ jobs:
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-AVR-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
+  # Build Arduino ESP32
   build-arduino-ESP32:
     needs: static-code-tests
     #if: false  # This will deactivate the job
@@ -237,9 +238,10 @@ jobs:
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-ESP32-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
+  # Build Arduino MySensors Boards (AVR, SAMD)
   build-arduino-MySensors:
     needs: static-code-tests
-    #if: false  # This will deactivate the job
+    if: false  # This will deactivate the job
     runs-on: ubuntu-latest
 
     steps:
@@ -302,9 +304,10 @@ jobs:
         EXCLUDES="./.github/workflows/.ci_scripts/MySensors-SAMD-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
+  # Build Arduino STM32F1
   build-arduino-STM32F1:
     needs: static-code-tests    
-    if: false  # This will deactivate the job
+    #if: false  # This will deactivate the job
     runs-on: ubuntu-latest
 
     steps:
@@ -324,15 +327,33 @@ jobs:
 
     - name: Install dependencies
       run: |
-        arduino-cli config add board_manager.additional_urls https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json
+        arduino-cli config add board_manager.additional_urls http://dan.drown.org/stm32duino/package_STM32duino_index.json
         arduino-cli core update-index
-        arduino-cli core install sandeepmistry:nRF5
-        #arduino-cli lib install "Ethernet"
-        #arduino-cli lib install "SD"
+        arduino-cli core install stm32duino:STM32F1
+        arduino-cli lib install "Ethernet"
+        #arduino-cli lib install "SoftwareSerial" # Library not available
 
+    # stm32duino STM32F1 generic
+    - name: Compile STM32F1 (tests)
+      #if: false  # This will deactivate the step
+      run: |
+        FQBN="stm32duino:STM32F1:genericSTM32F103C:device_variant=STM32F103C8,upload_method=DFUUploadMethod,cpu_speed=speed_72mhz,opt=osstd"
+        SKETCHES="./tests"
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-STM32F1-excludes"
+        ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
+
+    - name: Compile STM32F1 (examples)
+      #if: false  # This will deactivate the step
+      run: |
+        FQBN="stm32duino:STM32F1:genericSTM32F103C:device_variant=STM32F103C8,upload_method=DFUUploadMethod,cpu_speed=speed_72mhz,opt=osstd"
+        SKETCHES="./examples"
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-STM32F1-excludes"
+        ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
+
+  # Build Arduino ESP8266
   build-arduino-ESP8266:
     needs: static-code-tests    
-    #if: false  # This will deactivate the job
+    if: false  # This will deactivate the job
     runs-on: ubuntu-latest
 
     steps:
@@ -375,9 +396,10 @@ jobs:
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-ESP8266-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
+  # Build Arduino nRF5
   build-arduino-nRF5:
     needs: static-code-tests    
-    #if: false  # This will deactivate the job
+    if: false  # This will deactivate the job
     runs-on: ubuntu-latest
 
     steps:
