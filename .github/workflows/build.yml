@@ -332,7 +332,7 @@ jobs:
 
   build-arduino-ESP8266:
     needs: static-code-tests    
-    if: false  # This will deactivate the job
+    #if: false  # This will deactivate the job
     runs-on: ubuntu-latest
 
     steps:
@@ -352,15 +352,32 @@ jobs:
 
     - name: Install dependencies
       run: |
-        arduino-cli config add board_manager.additional_urls https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json
+        arduino-cli config add board_manager.additional_urls https://arduino.esp8266.com/stable/package_esp8266com_index.json
         arduino-cli core update-index
-        arduino-cli core install sandeepmistry:nRF5
+        arduino-cli core install esp8266:esp8266
         #arduino-cli lib install "Ethernet"
         #arduino-cli lib install "SD"
 
+    # arduino ESP8266 generic
+    - name: Compile ESP8266 (tests)
+      #if: false  # This will deactivate the step
+      run: |
+        FQBN="esp8266:esp8266:generic:xtal=80,vt=flash,exception=disabled,ResetMethod=ck,CrystalFreq=26,FlashFreq=40,FlashMode=dout,eesz=512K,led=2,ip=lm2f,dbg=Disabled,lvl=None____,wipe=none,baud=115200"
+        SKETCHES="./tests"
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-ESP8266-excludes"
+        ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
+
+    - name: Compile ESP8266 (examples)
+      #if: false  # This will deactivate the step
+      run: |
+        FQBN="esp8266:esp8266:generic:xtal=80,vt=flash,exception=disabled,ResetMethod=ck,CrystalFreq=26,FlashFreq=40,FlashMode=dout,eesz=512K,led=2,ip=lm2f,dbg=Disabled,lvl=None____,wipe=none,baud=115200"
+        SKETCHES="./examples"
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-ESP8266-excludes"
+        ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
+
   build-arduino-nRF5:
     needs: static-code-tests    
-    #if: false  # This will deactivate the job
+    if: false  # This will deactivate the job
     runs-on: ubuntu-latest
 
     steps:
@@ -403,7 +420,7 @@ jobs:
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-nRF5-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
-    # Arduino Generic_nRF51822
+    # arduino-nRF5 Generic_nRF51822
     - name: Compile Generic_nRF51822 (tests)
       #if: false  # This will deactivate the step
       run: |

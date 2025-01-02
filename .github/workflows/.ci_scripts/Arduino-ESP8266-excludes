@@ -1,0 +1,18 @@
+# TODO: Add the following examples to the CI test suite
+#
+./examples/BatteryPoweredSensor/BatteryPoweredSensor.ino
+./examples/CO2Sensor/CO2Sensor.ino
+./examples/DustSensorDSM/DustSensorDSM.ino
+./examples/MotionSensorRS485/MotionSensorRS485.ino
+./examples/SoilMoistSensor/SoilMoistSensor.ino
+#
+# Exclude the following example sketches from the CI test suite
+#
+./examples/GatewaySerialRS485/GatewaySerialRS485.ino
+./examples/GatewayW5100/GatewayW5100.ino
+./examples/GatewayW5100MQTTClient/GatewayW5100MQTTClient.ino
+./examples/GatewayGSMMQTTClient/GatewayGSMMQTTClient.ino
+./examples/GatewayESP32/GatewayESP32.ino
+./examples/GatewayESP32OTA/GatewayESP32OTA.ino
+./examples/GatewayESP32MQTTClient/GatewayESP32MQTTClient.ino
+./examples/SensebenderGatewaySerial/SensebenderGatewaySerial.ino
