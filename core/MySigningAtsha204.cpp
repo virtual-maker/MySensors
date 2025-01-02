@@ -127,7 +127,7 @@ bool signerAtsha204GetNonce(MyMessage &msg)
 	}
 	(void)memcpy((void *)_signing_verifying_nonce, (const void *)signerSha256(_signing_verifying_nonce,
 	             32),
-	             min((uint8_t)MAX_PAYLOAD_SIZE, 32u));
+	             min((uint8_t)MAX_PAYLOAD_SIZE, (uint8_t)32u));
 
 	// We just idle the chip now since we expect to use it soon when the signed message arrives
 	atsha204_idle();
@@ -138,7 +138,7 @@ bool signerAtsha204GetNonce(MyMessage &msg)
 	}
 
 	// Transfer the first part of the nonce to the message
-	msg.set(_signing_verifying_nonce, min((uint8_t)MAX_PAYLOAD_SIZE, 32u));
+	msg.set(_signing_verifying_nonce, min((uint8_t)MAX_PAYLOAD_SIZE, (uint8_t)32u));
 	_signing_verification_ongoing = true;
 	_signing_timestamp = hwMillis(); // Set timestamp to determine when to purge nonce
 	return true;
@@ -152,7 +152,7 @@ void signerAtsha204PutNonce(MyMessage &msg)
 	}
 
 	(void)memcpy((void *)_signing_signing_nonce, (const void *)msg.getCustom(),
-	             min((uint8_t)MAX_PAYLOAD_SIZE, 32u));
+	             min((uint8_t)MAX_PAYLOAD_SIZE, (uint8_t)32u));
 	if (MAX_PAYLOAD_SIZE < 32u) {
 		// We set the part of the 32-byte nonce that does not fit into a message to 0xAA
 		(void)memset((void *)&_signing_signing_nonce[MAX_PAYLOAD_SIZE], 0xAA, 32u - MAX_PAYLOAD_SIZE);
@@ -197,7 +197,7 @@ bool signerAtsha204SignMsg(MyMessage &msg)
 
 	// Transfer as much signature data as the remaining space in the message permits
 	(void)memcpy((void *)&msg.data[msg.getLength()], (const void *)_signing_hmac,
-	             min(MAX_PAYLOAD_SIZE - msg.getLength(), 32));
+	             min((uint8_t)(MAX_PAYLOAD_SIZE - msg.getLength()), (uint8_t)32u));
 
 	return true;
 }
@@ -257,7 +257,7 @@ bool signerAtsha204VerifyMsg(MyMessage &msg)
 
 		// Compare the calculated signature with the provided signature
 		if (signerMemcmp(&msg.data[msg.getLength()], _signing_hmac,
-		                 min(MAX_PAYLOAD_SIZE - msg.getLength(), 32))) {
+		                 min((uint8_t)(MAX_PAYLOAD_SIZE - msg.getLength()), (uint8_t)32u))) {
 			return false;
 		} else {
 			return true;
@@ -280,7 +280,7 @@ static void signerCalculateSignature(MyMessage &msg, bool signing)
 #endif
 
 	while (bytes_left) {
-		uint16_t bytes_to_include = min(bytes_left, 32);
+		uint16_t bytes_to_include = min(bytes_left, (uint16_t)32u);
 
 		(void)atsha204_wakeup(_signing_temp_message); // Issue wakeup to reset watchdog
 		memset(_signing_temp_message, 0, 32);
