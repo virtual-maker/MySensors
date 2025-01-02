@@ -17,6 +17,11 @@ if [ -f "$EXCLUDES" ]; then
   grep -vE '^\s*#|^\s*$' "$EXCLUDES" > "$BLACKLIST_FILE"
 fi
 
+# Debug: Print the contents of the blacklist file
+echo "Blacklist:"
+cat "$BLACKLIST_FILE"
+echo "<END>"
+
 # Find all .ino files and compile each one, excluding those in the blacklist
 while read sketch; do
   if ! grep -Fxq "$sketch" "$BLACKLIST_FILE"; then

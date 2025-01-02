@@ -388,7 +388,7 @@ jobs:
 
     # Arduino nRF52832
     - name: Compile nRF52832 (tests)
-      #if: false  # This will deactivate the step
+      if: false  # This will deactivate the step
       run: |
         FQBN="sandeepmistry:nRF5:Generic_nRF52832:softdevice=none,lfclk=lfxo"
         SKETCHES="./tests"
