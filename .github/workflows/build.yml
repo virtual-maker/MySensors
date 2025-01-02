@@ -386,31 +386,7 @@ jobs:
         #arduino-cli lib install "Ethernet"
         #arduino-cli lib install "SD"
 
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    - name: Set execute permissions for shell scripts
-      run: chmod +x ./.github/workflows/.ci_scripts/*.sh
-
-    - name: Set up Arduino CLI
-      uses: arduino/setup-arduino-cli@master
-
-    - name: Add library symlink to this MySensors repository
-      run: |
-          mkdir -p "$HOME/Arduino/libraries"
-          ln -s "$PWD" "$HOME/Arduino/libraries/."
-
-    - name: Install dependencies
-      run: |
-        arduino-cli config add board_manager.additional_urls https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json
-        arduino-cli core update-index
-        arduino-cli core install sandeepmistry:nRF5
-        #arduino-cli lib install "Ethernet"
-        #arduino-cli lib install "SD"
-
-    # MySensors AVR MysensorsMicro
+    # Arduino nRF52832
     - name: Compile nRF52832 (tests)
       #if: false  # This will deactivate the step
       run: |
