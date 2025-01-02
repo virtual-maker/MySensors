@@ -386,8 +386,8 @@ jobs:
         #arduino-cli lib install "Ethernet"
         #arduino-cli lib install "SD"
 
-    # Arduino nRF52832
-    - name: Compile nRF52832 (tests)
+    # arduino-nRF5 Generic_nRF52832
+    - name: Compile Generic_nRF52832 (tests)
       if: false  # This will deactivate the step
       run: |
         FQBN="sandeepmistry:nRF5:Generic_nRF52832:softdevice=none,lfclk=lfxo"
@@ -395,10 +395,27 @@ jobs:
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-nRF5-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
-    - name: Compile nRF52832 (examples)
-      #if: false  # This will deactivate the step
+    - name: Compile Generic_nRF52832 (examples)
+      if: false  # This will deactivate the step
       run: |
         FQBN="sandeepmistry:nRF5:Generic_nRF52832:softdevice=none,lfclk=lfxo"
+        SKETCHES="./examples"
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-nRF5-excludes"
+        ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
+
+    # Arduino Generic_nRF51822
+    - name: Compile Generic_nRF51822 (tests)
+      #if: false  # This will deactivate the step
+      run: |
+        FQBN="sandeepmistry:nRF5:Generic_nRF51822:softdevice=none,lfclk=lfxo"
+        SKETCHES="./tests"
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-nRF5-excludes"
+        ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
+
+    - name: Compile Generic_nRF51822 (examples)
+      #if: false  # This will deactivate the step
+      run: |
+        FQBN="sandeepmistry:nRF5:Generic_nRF51822:softdevice=none,lfclk=lfxo"
         SKETCHES="./examples"
         EXCLUDES="./.github/workflows/.ci_scripts/Arduino-nRF5-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
