@@ -24,6 +24,7 @@ while read sketch; do
     arduino-cli compile --fqbn "$FQBN" "$sketch" --warnings more
     compile_result=$?
     if [ $compile_result -ne 0 ]; then
+		  echo "::error::Unable to build $sketch"
       exit_result=1
     fi
   else

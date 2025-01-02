@@ -239,7 +239,7 @@ jobs:
 
   build-arduino-MySensors:
     needs: static-code-tests
-    if: true # false  # This will deactivate the job
+    if: false  # This will deactivate the job
     runs-on: ubuntu-latest
 
     steps:
@@ -270,6 +270,7 @@ jobs:
 
     # MySensors AVR MysensorsMicro
     - name: Compile MysensorsMicro (tests)
+      #if: false  # This will deactivate the step
       run: |
         FQBN="MySensors:avr:MysensorsMicro:cpu=1Mhz"
         SKETCHES="./tests"
@@ -277,6 +278,7 @@ jobs:
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
     - name: Compile MysensorsMicro (examples)
+      #if: false  # This will deactivate the step
       run: |
         FQBN="MySensors:avr:MysensorsMicro:cpu=1Mhz"
         SKETCHES="./examples"
@@ -285,6 +287,7 @@ jobs:
 
     # MySensors SAMD MySensorsGW  
     - name: Compile MySensorsGW (tests)
+      #if: false  # This will deactivate the step
       run: |
         FQBN="MySensors:samd:mysensors_gw_native"
         SKETCHES="./tests"
@@ -292,8 +295,64 @@ jobs:
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
 
     - name: Compile MySensorsGW (examples)
+      #if: false  # This will deactivate the step
       run: |
         FQBN="MySensors:samd:mysensors_gw_native"
         SKETCHES="./examples"
         EXCLUDES="./.github/workflows/.ci_scripts/MySensors-SAMD-excludes"
+        ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
+
+  build-arduino-STM32F1:
+    needs: static-code-tests    
+    if: false  # This will deactivate the job
+    runs-on: ubuntu-latest
+
+  build-arduino-ESP8266:
+    needs: static-code-tests    
+    if: false  # This will deactivate the job
+    runs-on: ubuntu-latest
+
+  build-arduino-nRF5:
+    needs: static-code-tests    
+    #if: false  # This will deactivate the job
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set execute permissions for shell scripts
+      run: chmod +x ./.github/workflows/.ci_scripts/*.sh
+
+    - name: Set up Arduino CLI
+      uses: arduino/setup-arduino-cli@master
+
+    - name: Add library symlink to this MySensors repository
+      run: |
+          mkdir -p "$HOME/Arduino/libraries"
+          ln -s "$PWD" "$HOME/Arduino/libraries/."
+
+    - name: Install dependencies
+      run: |
+        arduino-cli config add board_manager.additional_urls https://sandeepmistry.github.io/arduino-nRF5/package_nRF5_boards_index.json
+        arduino-cli core update-index
+        arduino-cli core install sandeepmistry:nRF5
+        #arduino-cli lib install "Ethernet"
+        #arduino-cli lib install "SD"
+
+    # MySensors AVR MysensorsMicro
+    - name: Compile nRF52832 (tests)
+      #if: false  # This will deactivate the step
+      run: |
+        FQBN="sandeepmistry:nRF5:Generic_nRF52832:softdevice=none,lfclk=lfxo"
+        SKETCHES="./tests"
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-nRF5-excludes"
+        ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES
+
+    - name: Compile nRF52832 (examples)
+      #if: false  # This will deactivate the step
+      run: |
+        FQBN="sandeepmistry:nRF5:Generic_nRF52832:softdevice=none,lfclk=lfxo"
+        SKETCHES="./examples"
+        EXCLUDES="./.github/workflows/.ci_scripts/Arduino-nRF5-excludes"
         ./.github/workflows/.ci_scripts/compile-arduino-sketches.sh $FQBN $SKETCHES $EXCLUDES

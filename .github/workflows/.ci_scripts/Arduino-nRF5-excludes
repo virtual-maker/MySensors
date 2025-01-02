@@ -1,0 +1,16 @@
+			./examples/BatteryPoweredSensor/BatteryPoweredSensor.ino
+			./examples/CO2Sensor/CO2Sensor.ino
+			./examples/DustSensorDSM/DustSensorDSM.ino
+			./examples/GatewayESP8266/GatewayESP8266.ino
+			./examples/GatewayESP8266MQTTClient/GatewayESP8266MQTTClient.ino
+			./examples/GatewayESP8266SecureMQTTClient/GatewayESP8266SecureMQTTClient.ino
+			./examples/GatewayGSMMQTTClient/GatewayGSMMQTTClient.ino
+			./examples/GatewayESP8266OTA/GatewayESP8266OTA.ino
+			./examples/GatewayESP32/GatewayESP32.ino
+			./examples/GatewayESP32OTA/GatewayESP32OTA.ino
+			./examples/GatewayESP32MQTTClient/GatewayESP32MQTTClient.ino
+			./examples/GatewaySerialRS485/GatewaySerialRS485.ino
+			./examples/GatewayW5100/GatewayW5100.ino
+			./examples/GatewayW5100MQTTClient/GatewayW5100MQTTClient.ino
+			./examples/MotionSensorRS485/MotionSensorRS485.ino
+			./examples/SensebenderGatewaySerial/SensebenderGatewaySerial.ino
