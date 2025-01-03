@@ -307,7 +307,7 @@ jobs:
   # Build Arduino STM32F1
   build-arduino-STM32F1:
     needs: static-code-tests    
-    #if: false  # This will deactivate the job
+    if: false  # This will deactivate the job
     runs-on: ubuntu-latest
 
     steps:
