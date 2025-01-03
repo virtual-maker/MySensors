@@ -1,5 +1,8 @@
-# TODO: Add the following examples to the CI test suite
-#
+# ToDo: Update both examples to be buildable for ESP32
+./examples/PassiveNode/PassiveNode.ino
+./examples/UVSensor/UVSensor.ino
+
+# ToDo: Check the following examples for include to the CI build
 ./examples/BatteryPoweredSensor/BatteryPoweredSensor.ino
 ./examples/BinarySwitchSleepSensor/BinarySwitchSleepSensor.ino
 ./examples/CO2Sensor/CO2Sensor.ino
@@ -13,9 +16,8 @@
 ./examples/PassiveNode/PassiveNode.ino		
 ./examples/MotionSensorRS485/MotionSensorRS485.ino
 ./examples/SoilMoistSensor/SoilMoistSensor.ino
-#
-# Exclude the following example sketches from the CI test suite
-#
+
+# Exclude the following example sketches from the CI build
 ./examples/GatewaySerialRS485/GatewaySerialRS485.ino
 ./examples/GatewayW5100/GatewayW5100.ino
 ./examples/GatewayW5100MQTTClient/GatewayW5100MQTTClient.ino
